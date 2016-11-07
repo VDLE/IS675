@@ -15,6 +15,56 @@
 				<span>FROM [vle].[tblEmployee];</span>
 			</pre>
 		</div>
+
+		<div class="container">
+			<h1>Group By Select Statement</h1>
+			<p>Select (Set of Attributes and/or Aggregate Attributes) FROM (database.table)</p>
+			<p>GROUP BY (non-aggregate attributes), (optional aggregate attributes);</p>
+			<pre>
+				<span>SELECT</span>
+				<span>	[ProductTypeID] AS [Product Type ID],</span>
+			    <span>	COUNT(*) AS [Count of Products], /* Counts all rows for each product type */</span>
+			    <span>	CONVERT(DECIMAL, SUM([QOH])) AS [Total Quanitiy on Hand], /* Gives total quanitiy on hand for each product type */</span>
+			    <span>	AVG([QOH]) AS [Average Quanitiy on Hand] /*Gives the average quantity on hand for each product type */</span>
+				<span>FROM tblProduct</span>
+				<span>GROUP BY [ProductTypeID]</span>
+				<span>HAVING AVG([QOH]) > 50; /* Only gives us product types with a greater avg quanitity than 50 */</span>
+     		</pre>
+     		<h2>Detailed Description</h2>
+     		<p>Group by is used for organizing attributes containing aggregate functions. When using a GROUP BY statement there
+     		must be at least one aggregate attribute in the SELECT statement and it must be grouped by all non-aggregate attributes. The above
+     		select statement shows a basic GROUP BY statement which gives us condensed information about certian product types 
+     		in the table tblProduct</p>
+     		<h2>List of Aggregate Functions</h2>
+     		<pre>
+     			<span>MAX() /* Gives the largest value for all values associated with an attribute. Can be used with datetime fields.*/</span>
+     			<span>MIN() /* Gives the smallest value for all values associated with an attribute. Can be used with datetime fields.*/</span>
+     			<span>SUM() /* Gives the total of all rows of a given attribute added together.*/</span>
+     			<span>COUNT() /* Counts the number of rows associated with a given column. Use DISTINCT keyword for unique rows.*/</span>
+     			<span>AVG() /* Finds the average of all rows for given attribute */</span>
+     		</pre>
+		</div>
+
+		<div class="container">
+			<h1>Sub-Queries</h1>
+			<p>Select (Set of Attributes and/or Aggregate Attributes) FROM (database.table)</p>
+			<p>WHERE (Attribute) (= or IN or NOT IN) (SELECT (Attribute(s)) FROM database.table2);</p>
+			<pre>
+				<span>SELECT</span>
+				<span>	ProductID,</span>
+				<span>	QtyOrdered,</span>
+				<span>	QtyOrdered * Price AS [Total Cost of an OrderLine]</span>
+				<span>FROM tblPurchaseOrderLine</span>
+				<span>WHERE (QtyOrdered * Price) = (SELECT MAX(QtyOrdered * Price)</span>
+				<span>				FROM tblPurchaseOrderLine);</span>
+			</pre>
+     		<h2>Detailed Description</h2>
+     		<p>Sometimes GROUP BY alone fails us when we want just one data point with non-aggregate and aggregate information. In the above example,
+     		I want the productID of the order line which cost the most determined as (qtyOrdered * price). This can only be done with a sub-query where
+     		we push our aggregate function calls to the sub-query. The best process for building a function of this variety comes from creating the subquery first and determining what
+     		WHERE comparaision will give us the data we are looking for.</p>
+		</div>
+
 	
 	</body>
 </html>
