@@ -111,6 +111,11 @@
 				<span>WHERE [QOH] - [EOQ] < 0</span>
 				<span>ORDER BY [EOQ] DESC;</span>
 			</pre>
+			<h2>Detailed Description</h2>
+			<p> Case statements are basically if/then statements in other languages. We use them to populate rows with conditional data.
+			They are not especially complex, however make sure to arrange your conditions so that values which might be true for two conditions fall into
+			the right WHEN statement. For example if we put the bottom condition WHEN [QOH] - [EOQ] < -1 THEN NULL on top, then every situation other than 
+			[QOH] - [EOQ] = 0 will output null.</p>
 		</div>
 	
 		<div class="container">
@@ -151,7 +156,50 @@
 			</pre>
      		<h2>Detailed Description</h2>
      		<p>Self JOINs are literally the same as JOINS but you link it to the same table under an ALIAS. Cannot stress that enough, use a goddamn ALIAS.</p>
-		</div>	
+		</div>
+
+		<div class="container">
+			<h1>Join with a Conditional</h1>
+			<p>Select (Set of Attributes and/or Aggregate Attributes),</p>
+			<p>CASE WHERE (expression) THEN (output) END FROM (database.table)</p>
+			<p>(INNER,LEFT OUTER, RIGHT OUTER) JOIN (database.table1) AS (ALIAS)</p>
+			<p> ON (database.table.attribute) = (ALIAS.attribute);</p>
+			<pre>
+				<span>SELECT	POL.PONumber												AS [Purchase Order Number],</span>
+				<span>		tblVendor.Name												AS [Vendor Name],</span>
+				<span>		tblProduct.ProductID										AS [Product ID],</span>
+				<span>		tblProduct.Description										AS [Product Description],</span>
+				<span>		CONVERT(VARCHAR, POL.DateNeeded, 107)						AS [Product Date Needed],</span>
+				<span>		POL.QtyOrdered												AS [Quantity Ordered],</span>
+				<span>		ISNULL(SUM(tblReceiver.QtyReceived), 0.00)					AS [Total Quantity Received],</span>
+				<span>		POL.QtyOrdered - ISNULL(SUM(tblReceiver.QtyReceived), 0.00) AS [Quantity Remaining to be Received],</span>
+				<span>		CASE</span>
+				<span>			WHEN ISNULL(SUM(tblReceiver.QtyReceived), 0.00) = 0</span>
+				<span>				THEN 'Not Received'</span>
+				<span>			WHEN (POL.QtyOrdered - ISNULL(SUM(tblReceiver.QtyReceived), 0.00)) = 0</span>
+				<span>				THEN 'Complete'</span>
+				<span>			WHEN (POL.QtyOrdered - ISNULL(SUM(tblReceiver.QtyReceived), 0.00)) < 0</span>
+				<span>				THEN 'Over Shipment'</span>
+				<span>			WHEN (POL.QtyOrdered - ISNULL(SUM(tblReceiver.QtyReceived), 0.00)) > 0</span>
+				<span>				THEN  'Partial Shipment'</span>
+				<span>		END															AS  [Receiving Status]</span>
+				<span>FROM	tblPurchaseOrder PO</span>
+				<span>LEFT JOIN	tblPurchaseOrderLine POL</span>
+				<span>ON		PO.PONumber = POL.PONumber</span>
+				<span>JOIN	tblProduct</span>
+				<span>ON		POL.ProductID = tblProduct.ProductID</span>
+				<span>JOIN	tblVendor</span>
+				<span>ON		PO.VendorID = tblVendor.VendorID</span>
+				<span>LEFT JOIN tblReceiver</span>
+				<span>ON		POL.PONumber = tblReceiver.PONumber AND </span>
+				<span>		POL.DateNeeded = tblReceiver.DateNeeded AND </span>
+				<span>		POL.ProductID = tblReceiver.ProductID</span>
+				<span>GROUP BY POL.PONumber, tblVendor.Name, tblProduct.ProductID, tblProduct.Description, POL.DateNeeded, POL.QtyOrdered </span>
+				<span>ORDER BY POL.PONumber, tblProduct.ProductID;</span>
+			</pre>
+     		<h2>Detailed Description</h2>
+     		<p>Self JOINs are literally the same as JOINS but you link it to the same table under an ALIAS. Cannot stress that enough, use a goddamn ALIAS.</p>
+		</div>
 
 	</body>
 </html>
