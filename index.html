@@ -165,12 +165,12 @@
 			<p>(INNER,LEFT OUTER, RIGHT OUTER) JOIN (database.table1) AS (ALIAS)</p>
 			<p> ON (database.table.attribute) = (ALIAS.attribute);</p>
 			<pre>
-				<span>SELECT	POL.PONumber												AS [Purchase Order Number],</span>
-				<span>		tblVendor.Name												AS [Vendor Name],</span>
-				<span>		tblProduct.ProductID										AS [Product ID],</span>
-				<span>		tblProduct.Description										AS [Product Description],</span>
-				<span>		CONVERT(VARCHAR, POL.DateNeeded, 107)						AS [Product Date Needed],</span>
-				<span>		POL.QtyOrdered												AS [Quantity Ordered],</span>
+				<span>SELECT	POL.PONumber				AS [Purchase Order Number],</span>
+				<span>		tblVendor.Name					AS [Vendor Name],</span>
+				<span>		tblProduct.ProductID			AS [Product ID],</span>
+				<span>		tblProduct.Description			AS [Product Description],</span>
+				<span>		CONVERT(VARCHAR, POL.DateNeeded, 107)	AS [Product Date Needed],</span>
+				<span>		POL.QtyOrdered					AS [Quantity Ordered],</span>
 				<span>		ISNULL(SUM(tblReceiver.QtyReceived), 0.00)					AS [Total Quantity Received],</span>
 				<span>		POL.QtyOrdered - ISNULL(SUM(tblReceiver.QtyReceived), 0.00) AS [Quantity Remaining to be Received],</span>
 				<span>		CASE</span>
@@ -182,7 +182,7 @@
 				<span>				THEN 'Over Shipment'</span>
 				<span>			WHEN (POL.QtyOrdered - ISNULL(SUM(tblReceiver.QtyReceived), 0.00)) > 0</span>
 				<span>				THEN  'Partial Shipment'</span>
-				<span>		END															AS  [Receiving Status]</span>
+				<span>		END							  AS  [Receiving Status]</span>
 				<span>FROM	tblPurchaseOrder PO</span>
 				<span>LEFT JOIN	tblPurchaseOrderLine POL</span>
 				<span>ON		PO.PONumber = POL.PONumber</span>
@@ -197,8 +197,6 @@
 				<span>GROUP BY POL.PONumber, tblVendor.Name, tblProduct.ProductID, tblProduct.Description, POL.DateNeeded, POL.QtyOrdered </span>
 				<span>ORDER BY POL.PONumber, tblProduct.ProductID;</span>
 			</pre>
-     		<h2>Detailed Description</h2>
-     		<p>Self JOINs are literally the same as JOINS but you link it to the same table under an ALIAS. Cannot stress that enough, use a goddamn ALIAS.</p>
 		</div>
 
 	</body>
