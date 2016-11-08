@@ -85,6 +85,35 @@
 			to store result tables we frequently use which are complicated or tedious to type. The above view holds a self join with
 			information about employees and thier managers. Self joins can be hard sometimes so we write it once and be done?</p>
 		</div>
+		
+		<div class="container">
+			<h1>Views with Joins</h1>
+			<p>CREATE VIEW (Name of View) AS (Normal Select Statment)</p>
+			<pre>
+				<span>CREATE VIEW vTotal AS</span>
+				<span>Select 	PO.PONumber</span>
+				<span>		ISNULL(SUM(tblReceiver.QtyReceived), 0.00) AS [Total Quantity Received]</span>
+				<span>FROM tblPurchaseOrder PO</span>
+				<span>LEFT JOIN tblPurchaseOrderLine POL</span>
+				<span>	ON PO.PONumber = POL.PONumber</span>
+				<span>LEFT JOIN tblReceiver</span>
+				<span>	ON	POL.PONumber = tblReceiver.PONumber AND </span>
+				<span>	POL.DateNeeded = tblReceiver.DateNeeded AND </span>
+				<span>	POL.ProductID = tblReceiver.ProductID</span>
+				<span>GROUP BY PO.PONumber;</span>
+			</pre>
+		</div>
+		
+		<div class="container">
+			<h1>Calling a View</h1>
+			<pre>
+				<span>Select 	PO.PONumber</span>
+				<span>		V.[Total Quantity Received]</span>
+				<span>FROM tblPurchaseOrder PO</span>
+				<span>INNER JOIN vTotal V</span>
+				<span>	ON PO.PONumber = V.PONumber</span>
+			</pre>
+		</div>
 
 		<div class="container">
 			<h1>Conditional Cases</h1>
