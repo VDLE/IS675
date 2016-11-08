@@ -65,6 +65,44 @@
      		WHERE comparaision will give us the data we are looking for.</p>
 		</div>
 
-	
+		<div class="container">
+			<h1>Joins</h1>
+			<p>Select (Set of Attributes and/or Aggregate Attributes) FROM (database.table)</p>
+			<p>(INNER,LEFT OUTER, RIGHT OUTER) JOIN (database.table2)</p>
+			<p> ON (database.table.attribute) = (database.table2.attribute);</p>
+			<pre>
+				<span>SELECT</span>
+				<span>	[TPO].[PONumber]		AS [Purchase Order Number],</span>
+				<span>	[TPO].[PODatePlaced]	AS [Date Purchase Order Placed],</span>
+				<span>	[TPO].[PODateneeded]	AS [Date Needed],</span>
+				<span>	[TPO].[Terms],</span>
+				<span>	[TPO].[VendorID]		AS [Vendor Number],</span>
+				<span>	[tblVendor].[Name]		AS [Vendor Name]</span>
+				<span>FROM	tblPurchaseOrder TPO</span>
+				<span>INNER JOIN tblVendor</span>
+				<span>	ON TPO.VendorID = tblVendor.VendorID</span>
+				<span>WHERE TPO.PONumber NOT IN (SELECT PONumber FROM tblReceiver);</span>
+			</pre>
+     		<h2>Detailed Description</h2>
+     		<p>JOINs consist of three total types: LEFT OUTER, RIGHT OUTER, and INNER. LEFT OUTER encompasses the intersect from the JOIN and the rows from the 
+			FROM table. RIGHT OUTER emcompasses the intersect as well as the rows from the JOIN'd table. INNER JOIN encompasses the intersect</p>
+		</div>	
+
+		<div class="container">
+			<h1>Self Joins</h1>
+			<p>Select (Set of Attributes and/or Aggregate Attributes) FROM (database.table)</p>
+			<p>(INNER,LEFT OUTER, RIGHT OUTER) JOIN (database.table1) AS (ALIAS)</p>
+			<p> ON (database.table.attribute) = (ALIAS.attribute);</p>
+			<pre>
+				<span>SELECT</span>
+				<span>	[EMP].[EmpFirstName]		AS [Employee],</span>
+				<span>	[Manager].[EmpFirstName]	AS [Manager],</span>
+				<span>FROM	tblEmployee EMP</span>
+				<span>INNER JOIN tblEmployee Manager</span>
+				<span>	ON EMP.ManagerID = Manager.EmpID</span>
+			</pre>
+     		<h2>Detailed Description</h2>
+     		<p>Self JOINs are literally the same as JOINS but you link it to the same table under an ALIAS. Cannot stress that enough, use a goddamn ALIAS.</p>
+		</div>	
 	</body>
 </html>
