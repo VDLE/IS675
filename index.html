@@ -65,6 +65,53 @@
      		WHERE comparaision will give us the data we are looking for.</p>
 		</div>
 
+		<div class="container">
+			<h1>Views</h1>
+			<p>CREATE VIEW (Name of View) AS (Normal Select Statment)</p>
+			<pre>
+				<span>CREATE VIEW vTblEmployee AS</span>
+				<span>Select </span>
+				<span>		emp.EmpID,</span>
+				<span>		emp.EmpFirstName,</span>
+				<span>	 	emp.EmpLastName, </span>
+				<span>		mgr.EmpFirstName + ' ' + mgr.EmpLastName AS [Manager Name]</span>
+				<span>FROM tblEmployee emp</span>
+				<span>LEFT JOIN tblEmployee mgr</span>
+				<span>ON	 mgr.EmpID = emp.EmpMgrID;</span>
+			</pre>
+			<h2>Detailed Description</h2>
+			<p>We can think of a view as a variable which holds the table returned from a select query. We can generally use views to
+			simplify sub quieries especially when they start to get more complex. Views can also save us some work by giving us a place
+			to store result tables we frequently use which are complicated or tedious to type. The above view holds a self join with
+			information about employees and thier managers. Self joins can be hard sometimes so we write it once and be done?</p>
+		</div>
+
+		<div class="container">
+			<h1>Conditional Cases</h1>
+			<p> CASE WHEN (conditional statement) THEN (output)</p>
+			<pre>
+				<span>SELECT	[productId] as [Product Number],</span>
+				<span>		[Description] as [Product Description],</span>
+				<span>		[EOQ] as [Economic Order Quanity],</span>
+				<span>		[QOH] as [Qantity on Hand],</span>
+				<span>		[QOH] - [EOQ] as [Difference],</span>
+				<span>		CASE</span>
+				<span>			WHEN [QOH] = 0</span>
+				<span>				THEN 'Order Immediately'</span>
+				<span>			WHEN [QOH] - [EOQ] < -35</span>
+				<span>				THEN 'Order this week'</span>
+				<span>			WHEN [QOH] - [EOQ] < -10</span>
+				<span>				THEN 'Order next week'</span>
+				<span>			WHEN [QOH] - [EOQ] < -5</span>
+				<span>				THEN 'Order next month'</span>
+				<span>			WHEN [QOH] - [EOQ] < -1 </span>
+				<span>				THEN NULL </span>
+				<span>		END		 AS [Order Message]</span>
+				<span>FROM tblProduct</span>
+				<span>WHERE [QOH] - [EOQ] < 0</span>
+				<span>ORDER BY [EOQ] DESC;</span>
+			</pre>
+		</div>
 	
 	</body>
 </html>
